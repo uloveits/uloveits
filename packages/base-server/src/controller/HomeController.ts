@@ -6,13 +6,17 @@
 import { Get } from "../libs/02__decorator__/router";
 import { Controller } from "../libs/02__decorator__/controller";
 import HomeService from "../service/HomeService";
+import { Autowired } from "../libs/02__decorator__/service";
 
 @Controller("/user")
 export default class HomeController {
-  private service: HomeService = new HomeService();
+  
+  @Autowired()
+  homeService: HomeService;
 
   @Get("/list")
-  hello = async (ctx) => {
-    ctx.body = await this.service.hello();
-  };
+  async hello(ctx) {
+    console.log("=======");
+    ctx.body =  this.homeService.hello();
+  }
 }

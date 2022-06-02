@@ -8,9 +8,9 @@ import HomeController from "./controller/HomeController";
 
 class App extends StartUp {
   onMountingMiddlewares() {
-    this.use(async (ctx, next) => {
-      ctx.body = "hello world";
-    });
+    // this.use(async (ctx, next) => {
+    //   ctx.body = "hello world";
+    // });
   }
 }
 

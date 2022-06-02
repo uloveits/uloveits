@@ -16,11 +16,16 @@ import {
 } from "../../utils";
 import ParamsHelper from "./ParamsHelper";
 import { Metadata } from "../Metadata";
+import { Autowired } from "../../02__decorator__/service";
+import HomeController from "../../../controller/HomeController";
 
 type TRouterMiddleware = Router.IMiddleware;
 
 export default class RouterHelper {
+  @Autowired()
   private router: Router;
+
+  @Autowired()
   private paramsHelper: ParamsHelper;
 
   constructor() {}
@@ -90,6 +95,16 @@ export default class RouterHelper {
         routerPath,
         ...(<TRouterMiddleware[]>controllers)
       );
+
+      console.log(
+        "this.router",
+        config.method.toLocaleLowerCase(),
+        routerPath,
+        controllers,
+        RouterHelper.DecoratedRouters,
+        config
+      );
+
       // 接口列表 print
       controllerList.push({
         method: config.method,
@@ -101,6 +116,9 @@ export default class RouterHelper {
           ) || "",
       });
     }
+
+    // console.log("controllerList", controllerList, this.router.routes());
+    this.router.use('/api/user/list',)
     app.use(this.router.routes());
     app.use(this.router.allowedMethods());
     // 日志
@@ -134,7 +152,6 @@ export default class RouterHelper {
             .join("/");
           Metadata.set(metadataName, controllerPath, item);
         });
-        
       } else {
         let metadataName = `${CONTROLLER_PATH}_${getClassName(imports[key])}`;
         let importsPath = Metadata.getOwn(metadataName, imports[key]);
@@ -143,10 +160,10 @@ export default class RouterHelper {
           .join(this.startWithSep(key), importsPath)
           .split(path.sep)
           .join("/");
+        console.log("controllerPath", controllerPath, imports[key]);
         Metadata.set(metadataName, controllerPath, imports[key]);
       }
     });
-
   }
 
   /**

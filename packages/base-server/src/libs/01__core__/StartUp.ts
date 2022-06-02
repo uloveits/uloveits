@@ -9,6 +9,7 @@ import * as bodyParser from "koa-bodyparser";
 import chalk from "chalk";
 import RouterHelper from "./helper/RouterHelper";
 import { TService } from "../type";
+import { Autowired } from "../02__decorator__/service";
 
 interface ISystemConfig {
   service: TService;
@@ -19,7 +20,9 @@ export default class StartUp {
   private sysConfig: ISystemConfig;
 
   // 路由服务
+  @Autowired()
   private routerHelper: RouterHelper;
+
   constructor(config: ISystemConfig) {
     this.app = new Koa();
     this.sysConfig = config;
@@ -58,10 +61,9 @@ export default class StartUp {
     console.log(chalk.blue("[koa2] loadRouters..."));
     return new Promise((res, err) => {
       // 设置controller 路径
-    //   this.routerHelper.joinControllerPath(this.sysConfig.service);
-
+      this.routerHelper.joinControllerPath(this.sysConfig.service);
       // 载入路由
-    //   this.routerHelper.loadRouter(this.app);
+      this.routerHelper.loadRouter(this.app);
       res();
     });
   }

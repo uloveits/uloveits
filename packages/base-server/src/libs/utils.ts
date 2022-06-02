@@ -54,3 +54,19 @@ export const apiDescriptionMapKey = (
 ) => {
   return `${getClassName(target)}_${propertyKey}`;
 };
+
+
+/**
+ * 获取该属性的描述对象
+ * @param target 类
+ * @param propertyKey 目标属性
+ */
+ export const descriptorOf = (
+  target: any,
+  propertyKey: string
+): PropertyDescriptor | undefined => {
+  return Reflect.getOwnPropertyDescriptor(
+    (target && target.prototype) || target,
+    propertyKey
+  );
+};
