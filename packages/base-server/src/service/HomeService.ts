@@ -5,6 +5,8 @@
  */
 export default class HomeService {
   hello = () => {
+    console.log("HomeService");
+
     return "hello world!!!!";
   };
 }

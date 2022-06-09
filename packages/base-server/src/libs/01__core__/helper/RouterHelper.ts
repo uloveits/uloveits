@@ -1,23 +1,23 @@
 /*
  * @Author: wangxian
  * @Date: 2022-06-01 17:11:13
- * @LastEditTime: 2022-06-02 10:27:36
+ * @LastEditTime: 2022-06-09 14:01:11
  */
 import * as Router from "koa-router";
 import * as Koa from "koa";
 import * as path from "path";
-import { isArray, toArray } from "lodash";
 import { IRouterPathConfig, TApiMiddleware } from "../../type";
 import { CONTROLLER_PATH, MIDDLEWARE_NAME } from "../../constants";
 import {
   apiDescriptionMapKey,
   getClassName,
+  isArray,
+  toArray,
   toAsyncMiddleware,
 } from "../../utils";
 import ParamsHelper from "./ParamsHelper";
 import { Metadata } from "../Metadata";
 import { Autowired } from "../../02__decorator__/service";
-import HomeController from "../../../controller/HomeController";
 
 type TRouterMiddleware = Router.IMiddleware;
 
@@ -52,6 +52,8 @@ export default class RouterHelper {
       if (!isArray(controllers)) {
         controllers = toArray(<TApiMiddleware>controllers);
       }
+
+      console.log("DecoratedRouters1", controllers);
       // 重置数组内中间件方法
       controllers = (controllers as TApiMiddleware[]).map((item) => {
         // 获取paramsMapKey参数
@@ -65,6 +67,13 @@ export default class RouterHelper {
           config.target,
           controllerName
         );
+        console.log(
+          "toAsyncMiddleware",
+          config.target,
+          item,
+          paramsMapKey,
+          this.paramsHelper.paramsToList
+        );
         // 转换方法
         return toAsyncMiddleware(
           config.target,
@@ -73,6 +82,7 @@ export default class RouterHelper {
           this.paramsHelper.paramsToList
         );
       });
+      console.log("DecoratedRouters2", controllers);
 
       let routerPath = path
         .join(
@@ -97,12 +107,13 @@ export default class RouterHelper {
       );
 
       console.log(
-        "this.router",
+        "this.router==",
         config.method.toLocaleLowerCase(),
         routerPath,
         controllers,
         RouterHelper.DecoratedRouters,
-        config
+        config,
+        RouterHelper.DecoratedRouters.get(config)
       );
 
       // 接口列表 print
@@ -118,7 +129,7 @@ export default class RouterHelper {
     }
 
     // console.log("controllerList", controllerList, this.router.routes());
-    this.router.use('/api/user/list',)
+    this.router.use("/api/user/list");
     app.use(this.router.routes());
     app.use(this.router.allowedMethods());
     // 日志
@@ -142,6 +153,7 @@ export default class RouterHelper {
    * @param imports
    */
   joinControllerPath(imports) {
+    console.log("joinControllerPath=", imports);
     Object.keys(imports).forEach((key) => {
       if (isArray(imports[key])) {
         (imports[key] as any[]).forEach((item) => {
@@ -150,6 +162,7 @@ export default class RouterHelper {
             .join(this.startWithSep(key), Metadata.getOwn(metadataName, item))
             .split(path.sep)
             .join("/");
+          console.log("controllerPath", controllerPath, imports[key]);
           Metadata.set(metadataName, controllerPath, item);
         });
       } else {
@@ -160,7 +173,12 @@ export default class RouterHelper {
           .join(this.startWithSep(key), importsPath)
           .split(path.sep)
           .join("/");
-        console.log("controllerPath", controllerPath, imports[key]);
+        console.log(
+          "controllerPath=",
+          metadataName,
+          controllerPath,
+          imports[key]
+        );
         Metadata.set(metadataName, controllerPath, imports[key]);
       }
     });

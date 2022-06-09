@@ -1,7 +1,7 @@
 /*
  * @Author: wangxian
  * @Date: 2022-06-02 08:33:45
- * @LastEditTime: 2022-06-02 09:07:02
+ * @LastEditTime: 2022-06-09 14:00:33
  */
 
 import { IContext, TApiMiddleware, TNext } from "./type";
@@ -55,13 +55,12 @@ export const apiDescriptionMapKey = (
   return `${getClassName(target)}_${propertyKey}`;
 };
 
-
 /**
  * 获取该属性的描述对象
  * @param target 类
  * @param propertyKey 目标属性
  */
- export const descriptorOf = (
+export const descriptorOf = (
   target: any,
   propertyKey: string
 ): PropertyDescriptor | undefined => {
@@ -69,4 +68,28 @@ export const apiDescriptionMapKey = (
     (target && target.prototype) || target,
     propertyKey
   );
+};
+
+/**
+ * 生成数组
+ * @param target
+ */
+export const toArray = (target: any): any[] => {
+  return target ? (Array.isArray(target) ? target : [target]) : [];
+};
+
+/**
+ *  判数组
+ * @param target
+ */
+export const isArray = (target: any): boolean => {
+  return Array.isArray(target);
+};
+
+/**
+ *  判空
+ * @param value
+ */
+export const isEmpty = (value: any): boolean => {
+  return value === "" || value === null || value === undefined;
 };
