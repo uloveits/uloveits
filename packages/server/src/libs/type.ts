@@ -1,11 +1,10 @@
 /*
  * @Author: wangxian
  * @Date: 2022-06-01 17:07:37
- * @LastEditTime: 2022-06-02 10:12:20
+ * @LastEditTime: 2022-06-10 13:48:34
  */
 import * as Koa from "koa";
 
-export type TService = { [path: string]: Function[] | Function };
 export type PathOrParamsType = string | RegExp | (string | RegExp)[];
 export interface IRouterParams {
   method: string;
@@ -39,7 +38,7 @@ export enum ParamsType {
   REQUEST = "request",
   RESPONSE = "response",
   NEXT = "next",
-  HEADERPARAMS = "header",
+  HEADER_PARAMS = "header",
   ERROR = "error",
 }
 
@@ -57,4 +56,14 @@ export interface IParamsMapValue {
   paramsType: ParamsType;
   // 参数名(切记，不是修饰的参数名，而是挂载在request上的属性)
   paramsKey: string;
+}
+
+export interface IMiddleware {
+  use(...args: any[]): void | any | Promise<any>;
+}
+
+export interface IErrorResponse {
+  message?: string;
+  code?: string | number;
+  name?: string;
 }

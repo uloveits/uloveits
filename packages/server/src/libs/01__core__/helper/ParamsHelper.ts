@@ -1,8 +1,9 @@
 /*
  * @Author: wangxian
  * @Date: 2022-06-02 08:37:29
- * @LastEditTime: 2022-06-02 08:48:04
+ * @LastEditTime: 2022-06-10 14:11:17
  */
+import { HttpStatus } from "../../../libs/constants";
 import { IContext, IParamsMapValue, ParamsType, TNext } from "../../type";
 import { getClassName } from "../../utils";
 
@@ -49,11 +50,34 @@ export default class ParamsHelper {
         case ParamsType.NEXT:
           // next
           return next;
-        case ParamsType.HEADERPARAMS:
+        case ParamsType.HEADER_PARAMS:
           // header
           return item.paramsKey
             ? ctx.request.headers[item.paramsKey]
             : ctx.request.headers;
+        default:
+          break;
+      }
+    });
+  }
+
+  /**
+   * 错误中间件参数处理
+   * @param paramsMapKey
+   * @param err
+   * @param ctx
+   */
+  paramsToErrorList(paramsMapKey: string, err: Error, ctx: IContext): any[] {
+    if (!ParamsHelper.paramsMap.has(paramsMapKey)) return [];
+    return ParamsHelper.paramsMap.get(paramsMapKey).map((item) => {
+      switch (item.paramsType) {
+        case ParamsType.ERROR:
+          // 异常字符处理
+          return {
+            message: err.message,
+            status: err["status"] || HttpStatus.INTERNAL_SERVER_ERROR,
+            data: err["errorData"],
+          };
         default:
           break;
       }

@@ -1,7 +1,7 @@
 /*
  * @Author: wangxian
  * @Date: 2022-06-02 08:33:45
- * @LastEditTime: 2022-06-09 14:00:33
+ * @LastEditTime: 2022-06-10 14:09:49
  */
 
 import { IContext, TApiMiddleware, TNext } from "./type";
@@ -40,6 +40,24 @@ export const toAsyncMiddleware = (
       return middleware.call(target, ...cb(key, ctx, next), ctx, next);
     }
     return middleware.call(target, ctx, next);
+  };
+};
+
+/**
+ * 错误中间件处理
+ * @param target
+ * @param middleware
+ * @param key
+ * @param cb
+ */
+export const toErrorAsyncMiddleware = (
+  target: Object | any,
+  middleware: TApiMiddleware,
+  key?: string,
+  cb?: (key: string, err: Error, ctx: IContext) => any[]
+) => {
+  return (err: Error, ctx: IContext) => {
+    return middleware.call(target, ...cb(key, err, ctx), ctx);
   };
 };
 

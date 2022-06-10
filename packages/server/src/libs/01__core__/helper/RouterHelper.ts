@@ -1,7 +1,7 @@
 /*
  * @Author: wangxian
  * @Date: 2022-06-01 17:11:13
- * @LastEditTime: 2022-06-09 14:01:11
+ * @LastEditTime: 2022-06-10 14:46:47
  */
 import * as Router from "koa-router";
 import * as Koa from "koa";
@@ -49,11 +49,12 @@ export default class RouterHelper {
     let controllerList = [];
     let descriptionsMap = RouterHelper.DescriptionMap;
     for (let [config, controllers] of RouterHelper.DecoratedRouters) {
+      console.log("loadRouter", controllers);
+
       if (!isArray(controllers)) {
         controllers = toArray(<TApiMiddleware>controllers);
       }
 
-      console.log("DecoratedRouters1", controllers);
       // 重置数组内中间件方法
       controllers = (controllers as TApiMiddleware[]).map((item) => {
         // 获取paramsMapKey参数
@@ -67,13 +68,6 @@ export default class RouterHelper {
           config.target,
           controllerName
         );
-        console.log(
-          "toAsyncMiddleware",
-          config.target,
-          item,
-          paramsMapKey,
-          this.paramsHelper.paramsToList
-        );
         // 转换方法
         return toAsyncMiddleware(
           config.target,
@@ -82,7 +76,6 @@ export default class RouterHelper {
           this.paramsHelper.paramsToList
         );
       });
-      console.log("DecoratedRouters2", controllers);
 
       let routerPath = path
         .join(
@@ -106,16 +99,6 @@ export default class RouterHelper {
         ...(<TRouterMiddleware[]>controllers)
       );
 
-      console.log(
-        "this.router==",
-        config.method.toLocaleLowerCase(),
-        routerPath,
-        controllers,
-        RouterHelper.DecoratedRouters,
-        config,
-        RouterHelper.DecoratedRouters.get(config)
-      );
-
       // 接口列表 print
       controllerList.push({
         method: config.method,
@@ -128,8 +111,6 @@ export default class RouterHelper {
       });
     }
 
-    // console.log("controllerList", controllerList, this.router.routes());
-    this.router.use("/api/user/list");
     app.use(this.router.routes());
     app.use(this.router.allowedMethods());
     // 日志
@@ -143,6 +124,7 @@ export default class RouterHelper {
     //   },
     // });
     // this.loggerService.info("\n" + logstr.trim());
+
     // 节约内存
     RouterHelper.DescriptionMap.clear();
     RouterHelper.DecoratedRouters.clear();

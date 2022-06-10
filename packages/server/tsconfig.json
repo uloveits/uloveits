@@ -1,26 +1,15 @@
 {
-  "compileOnSave": false,
   "compilerOptions": {
     "module": "commonjs",
-    "target": "ES6",
-    "moduleResolution": "node",
-    "noImplicitAny": false,
-    "sourceMap": true,
-    "preserveConstEnums": true,
+    "declaration": false,
+    "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "removeComments": true,
-    "importHelpers": true,
-    "declaration": true,
-    "rootDir": "./src",
-    "outDir": "./build",
-    "baseUrl": ".",
-    "paths": {
-      "@/": ["./src"]
-    },
-    "lib": ["es6", "dom", "es7"]
+    "target": "es6",
+    "sourceMap": false,
+    "outDir": "./dist",
+    "baseUrl": "./"
   },
-  "exclude": ["node_modules/**", "build"],
-  "include": ["./src/**/*.ts"],
-  "files": ["./src/app.ts"]
+  "exclude": ["node_modules"]
+  // "include": ["ormconfig.json"]
 }

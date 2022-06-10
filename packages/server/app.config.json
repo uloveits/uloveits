@@ -1,6 +1,0 @@
-{
-  "port": 8090,
-  "requestLog": true,
-  "httpTimeout": 12000,
-  "cors": true
-}

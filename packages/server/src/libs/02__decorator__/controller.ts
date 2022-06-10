@@ -10,6 +10,7 @@ import { getClassName } from "../utils";
 
 export const Controller = (path: string = "/"): ClassDecorator => {
   return (target: any): void => {
+    
     Metadata.set(`${CONTROLLER_PATH}_${getClassName(target)}`, path, target);
   };
 };
